@@ -1,0 +1,47 @@
+{
+  "name": "javabattery",
+  "description": "Highlight your battery percentage!",
+  "author": {
+    "name": "OyewoleOyedeji",
+    "email": "urologistlividly906@simplelogin.com"
+  },
+  "version": "1.0.0",
+  "private": true,
+  "main": "out/main.js",
+  "productName": "Javabattery",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "debug": "vue-devtools",
+    "dist": "electron-builder",
+    "generate": "nuxt generate",
+    "pack": "electron-builder --dir",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@nuxtjs/tailwindcss": "^6.6.4",
+    "@vueuse/core": "^9.13.0",
+    "@vueuse/nuxt": "^9.13.0",
+    "bootstrap-icons": "^1.10.3",
+    "concurrently": "^7.6.0",
+    "electron": "^23.2.0",
+    "electron-builder": "^23.6.0",
+    "nuxt": "3.3.2",
+    "nuxt-electron": "^0.4.2",
+    "nuxt-fonty": "^1.0.0",
+    "vite-electron-plugin": "^0.8.2",
+    "vite-electron-renderer": "^0.0.3",
+    "vite-plugin-electron-renderer": "^0.13.11",
+    "vue-devtools": "^5.1.4"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.12",
+    "battery": "^1.0.1",
+    "date-fns": "^2.29.3"
+  },
+  "optionalDependencies": {
+    "@types/node": "^18.15.10"
+  }
+}

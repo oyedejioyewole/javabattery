@@ -1,0 +1,11 @@
+{
+  "tailwindCSS.experimental.configFile": "tailwind.config.cjs",
+  "cSpell.customDictionaries": {
+    "custom-dictionary-workspace": {
+      "name": "custom-dictionary-workspace",
+      "path": "${workspaceFolder:javabattery-electron}/.cspell/custom-dictionary.txt",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  }
+}
