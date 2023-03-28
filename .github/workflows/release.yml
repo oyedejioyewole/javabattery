@@ -1,0 +1,22 @@
+name: Build and release project
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Build source
+        run: npm run build
+      - name: Publish
+        run: npx electron-builder --publish=always
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
