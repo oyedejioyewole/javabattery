@@ -8,14 +8,13 @@ import {
   Switch,
 } from "@headlessui/vue";
 import { useStorage } from "@vueuse/core";
-import { shell } from "electron";
 
 const closeModal = () =>
   (modal.value.isOpen = useToggle(ref(modal.value.isOpen))(false));
 
-const openSite = async (url: string) => await shell.openExternal(url);
+const openSite = async (url: string) => await window.globals.openSite(url);
 
-const { level } = useBattery();
+const { status } = useBattery();
 const modal = useState<Modal>("modal", () => ({ isOpen: false }));
 
 const settings = useStorage<Settings>("settings", {
@@ -90,24 +89,24 @@ watch(
                     v-model="notificationToggled"
                     :class="`${
                       notificationToggled
-                        ? level > 0.5
+                        ? status > 50
                           ? 'bg-green-700'
-                          : level >= 0.3 && level <= 0.5
+                          : status >= 30 && status <= 50
                           ? 'bg-orange-700'
-                          : level < 0.3
+                          : status < 30
                           ? 'bg-red-700'
                           : ''
-                        : level > 0.5
+                        : status > 50
                         ? 'bg-green-500'
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? 'bg-orange-500'
-                        : level < 0.3
+                        : status < 30
                         ? 'bg-red-500'
                         : ''
                     } ${
-                      level > 0.5
+                      status > 50
                         ? 'focus-visible:ring-green-900'
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? 'focus-visible:ring-orange-900'
                         : 'focus-visible:ring-red-900'
                     }`"
@@ -132,24 +131,24 @@ watch(
                     v-model="highlighterToggled"
                     :class="`${
                       highlighterToggled
-                        ? level > 0.5
+                        ? status > 50
                           ? 'bg-green-700'
-                          : level >= 0.3 && level <= 0.5
+                          : status >= 30 && status <= 50
                           ? 'bg-orange-700'
-                          : level < 0.3
+                          : status < 30
                           ? 'bg-red-700'
                           : ''
-                        : level > 0.5
+                        : status > 50
                         ? 'bg-green-500'
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? 'bg-orange-500'
-                        : level < 0.3
+                        : status < 30
                         ? 'bg-red-500'
                         : ''
                     } ${
-                      level > 0.5
+                      status > 50
                         ? 'focus-visible:ring-green-900'
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? 'focus-visible:ring-orange-900'
                         : 'focus-visible:ring-red-900'
                     }`"
@@ -174,19 +173,19 @@ watch(
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-6 aspect-square cursor-pointer hover:rotate-[360deg] transition duration-500"
                     :class="
-                      level > 0.5
+                      status > 50
                         ? `${
                             $colorMode.value === 'light'
                               ? 'dark:fill-green-500'
                               : 'dark:fill-green-300'
                           } fill-green-500`
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? `${
                             $colorMode.value === 'light'
                               ? 'dark:fill-orange-500'
                               : 'dark:fill-orange-300'
                           } fill-orange-500`
-                        : level < 0.3
+                        : status < 30
                         ? `${
                             $colorMode.value === 'light'
                               ? 'dark:fill-red-500'
@@ -205,19 +204,19 @@ watch(
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-6 aspect-square cursor-pointer hover:opacity-70 transition"
                     :class="
-                      level > 0.5
+                      status > 50
                         ? `${
                             $colorMode.value === 'dark'
                               ? 'dark:fill-green-500'
                               : 'dark:fill-green-300'
                           } fill-green-500`
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? `${
                             $colorMode.value === 'dark'
                               ? 'dark:fill-orange-500'
                               : 'dark:fill-orange-300'
                           } fill-orange-500`
-                        : level < 0.3
+                        : status < 30
                         ? `${
                             $colorMode.value === 'dark'
                               ? 'dark:fill-red-500'
@@ -236,19 +235,19 @@ watch(
                     xmlns="http://www.w3.org/2000/svg"
                     class="w-6 aspect-square cursor-pointer hover:opacity-70 transition"
                     :class="
-                      level > 0.5
+                      status > 50
                         ? `${
                             $colorMode.value === 'dark'
                               ? 'dark:fill-green-500'
                               : 'dark:fill-green-300'
                           } fill-green-500`
-                        : level >= 0.3 && level <= 0.5
+                        : status >= 30 && status <= 50
                         ? `${
                             $colorMode.value === 'dark'
                               ? 'dark:fill-orange-500'
                               : 'dark:fill-orange-300'
                           } fill-orange-500`
-                        : level < 0.3
+                        : status < 30
                         ? `${
                             $colorMode.value === 'dark'
                               ? 'dark:fill-red-500'

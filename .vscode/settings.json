@@ -3,7 +3,7 @@
   "cSpell.customDictionaries": {
     "custom-dictionary-workspace": {
       "name": "custom-dictionary-workspace",
-      "path": "${workspaceFolder:javabattery-electron}/.cspell/custom-dictionary.txt",
+      "path": "${workspaceFolder:javabattery}/.cspell/custom-dictionary.txt",
       "addWords": true,
       "scope": "workspace"
     }

@@ -1,34 +1,36 @@
 import { app, BrowserWindow, Menu, Tray, Notification } from "electron";
 import { join } from "path";
 import battery from "battery";
+const { autoUpdater } = require("electron-updater");
+
+autoUpdater.checkForUpdatesAndNotify();
 
 const createWindow = () => {
   const window = new BrowserWindow({
     webPreferences: {
-      preload: join(__dirname, "../out/preload.js"),
-      contextIsolation: false,
+      preload: app.isPackaged
+        ? join(__dirname, "./preload.js")
+        : join(__dirname, "../out/preload.js"),
       nodeIntegration: true,
     },
     icon:
       process.platform === "linux"
-        ? join(__dirname, "../build/icon.png")
-        : join(__dirname, "../build/icon.ico"),
-    title: "Javabattery",
+        ? join(__dirname, "../build/icons/icon.png")
+        : join(__dirname, "../build/icons/icon.ico"),
   });
-  window.loadURL(process.env.VITE_DEV_SERVER_URL);
+  if (app.isPackaged) {
+    window.loadFile(join(__dirname, "../.output/public/index.html"));
+  } else {
+    window.loadURL(process.env.VITE_DEV_SERVER_URL);
+  }
 };
 
-const manageTrays = async (option?: "remove") => {
+const createTrays = () => {
   const tray = new Tray(
     process.platform === "linux"
-      ? join(__dirname, "../build/icon.png")
-      : join(__dirname, "../build/icon.ico")
+      ? join(__dirname, "../build/icons/icon.png")
+      : join(__dirname, "../build/icons/icon.ico")
   );
-
-  if (option === "remove") {
-    tray.destroy();
-    return;
-  }
 
   const trayMenu = Menu.buildFromTemplate([
     { label: "Open", click: () => createWindow() },
@@ -36,25 +38,18 @@ const manageTrays = async (option?: "remove") => {
   ]);
   tray.setContextMenu(trayMenu);
 
-  // watch(_battery, (_new) => {
-  //   if (_new)
-  //     tray.setToolTip(
-  //       `Battery at (${_new.level ? _battery.value.level * 100 : ""}%) 👀`
-  //     );
-  // });
+  return tray;
 };
 
 const ref = <T>(initialValue: T) => {
-  const value = initialValue;
   return new Proxy(
-    { value },
+    { value: initialValue },
     {
       set: (target, key, newValue) => {
         const oldValue = target[key];
 
         if (oldValue.level === newValue.level) return;
 
-        console.log("Battery percentage changed");
         target[key] = newValue;
 
         const notification = new Notification({
@@ -68,6 +63,7 @@ const ref = <T>(initialValue: T) => {
           Number(target[key].level.toFixed(1)),
           Number(target[key].level.toFixed(2)),
         ];
+
         if (approximatedBatteryLevels[0] === approximatedBatteryLevels[1]) {
           if (target[key].charging) {
             if (approximatedBatteryLevels[0] === 0.9)
@@ -78,14 +74,15 @@ const ref = <T>(initialValue: T) => {
               notification.body = "The device is fully charged 🎉";
             }
             return;
-          } else if (approximatedBatteryLevels[0] === 0.5)
+          }
+
+          if (approximatedBatteryLevels[0] === 0.5)
             notification.body = "I'll advise you to start charging now 👀";
           else if (approximatedBatteryLevels[0] === 0.3)
             notification.body = "You really need to starting charging 👀";
-        } else if (
-          approximatedBatteryLevels[1] === 0.15 &&
-          !target[key].charging
-        )
+        }
+
+        if (approximatedBatteryLevels[1] === 0.15 && !target[key].charging)
           notification.body = "I've warned you, now I'll shut up 👀";
         if (notification.body.length > 0) notification.show();
       },
@@ -95,6 +92,7 @@ const ref = <T>(initialValue: T) => {
 
 (async () => {
   const _battery = ref(await battery());
+  const trayList: Array<Tray> = [];
 
   if (app.isPackaged) {
     Menu.setApplicationMenu(null);
@@ -105,7 +103,7 @@ const ref = <T>(initialValue: T) => {
     createWindow();
 
     app.on("window-all-closed", () => {
-      manageTrays();
+      trayList.push(createTrays());
 
       interval = setInterval(async () => {
         _battery.value = await battery();
@@ -114,7 +112,12 @@ const ref = <T>(initialValue: T) => {
 
     app.on("browser-window-created", () => {
       clearInterval(interval);
-      manageTrays("remove");
+
+      if (trayList.length > 0) {
+        for (const trayItem of trayList) {
+          trayItem.destroy();
+        }
+      }
     });
 
     app.on("activate", () => {

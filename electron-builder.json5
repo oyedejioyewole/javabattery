@@ -1,0 +1,15 @@
+{
+  copyright: "Copyright © 2023 ${author}",
+  win: {
+    target: "portable",
+  },
+  linux: {
+    target: "AppImage",
+  },
+  directories: {
+    output: "app",
+  },
+  files: ["out", ".output/**/*", "build", "public"],
+  artifactName: "${name}-${arch}-${version}.${ext}",
+  publish: ["github"],
+}

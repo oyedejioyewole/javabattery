@@ -1,13 +1,15 @@
 <script setup lang="ts">
-const { charging, level } = useBattery();
-const blobColor = ref((await useDynamicColor(level.value)).value);
+const { charging, status } = useBattery();
+
+const blobColor = ref((await useDynamicColor(status.value)).value);
 
 /**
  * Watches the level ref and changes the blobColor ref's value
  */
 watch(
-  level,
-  async (_new) => (blobColor.value = (await useDynamicColor(level.value)).value)
+  status,
+  async (_new) =>
+    (blobColor.value = (await useDynamicColor(status.value)).value)
 );
 </script>
 
@@ -33,8 +35,11 @@ watch(
           d="M12 10h-1.783l1.542-1.639c.097-.103.178-.218.241-.34V10zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646zM16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"
         />
       </svg>
-      <h1 class="text-5xl slashed-zero font-thin dark:text-white">
-        {{ (level * 100).toFixed(0) }}%
+      <h1
+        class="text-5xl slashed-zero font-thin dark:text-white"
+        v-if="status !== -1"
+      >
+        {{ status }}%
       </h1>
     </div>
   </section>

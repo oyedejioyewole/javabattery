@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     "nuxt-fonty",
     "nuxt-electron",
     "@nuxtjs/color-mode",
+    "nuxt-battery",
   ],
   app: {
     head: {
@@ -13,18 +14,15 @@ export default defineNuxtConfig({
       },
     },
   },
-  ssr: false,
   tailwindcss: {
     exposeConfig: true,
+    injectPosition: "first",
   },
   fonty: {
     autoImport: true,
   },
   electron: {
     outDir: "out",
-    renderer: {
-      nodeIntegration: true,
-    },
   },
   colorMode: {
     classSuffix: "",

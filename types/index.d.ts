@@ -11,6 +11,7 @@ declare interface Settings {
 declare interface Window {
   globals: {
     openSite: (url: string) => Promise<void>;
+    getPath: (...path: string[]) => string;
   };
 }
 
@@ -23,4 +24,3 @@ declare namespace NodeJS {
 }
 
 declare type ModalType = "settings";
-declare type BrowserWindowType = "worker" | "normal";
