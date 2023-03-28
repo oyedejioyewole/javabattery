@@ -15,7 +15,7 @@
     "debug": "vue-devtools",
     "package": "electron-builder --dir",
     "postinstall": "nuxt prepare && node node_modules/vite-plugin-electron-renderer/install.js",
-    "release": "nuxt generate && electron-builder"
+    "make": "nuxt generate && electron-builder"
   },
   "devDependencies": {
     "@nuxtjs/color-mode": "^3.2.0",
