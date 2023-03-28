@@ -2,9 +2,11 @@
   copyright: "Copyright © 2023 ${author}",
   win: {
     target: "portable",
+    icon: "build/icons/icon.ico",
   },
   linux: {
     target: "AppImage",
+    icon: "build/icons",
   },
   directories: {
     output: "app",
