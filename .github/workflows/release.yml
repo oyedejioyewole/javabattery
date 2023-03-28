@@ -2,7 +2,7 @@ name: Build and release project
 on:
   push:
     tags:
-      - "*"
+      - "v*"
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
       - name: Build source
         run: npm run build
       - name: Publish
