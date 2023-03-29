@@ -6,7 +6,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/OyewoleOyedeji/javabattery?color=%23191910&label=Repository%20size&logo=Github&style=for-the-badge)
 
-<img src="docs/linux.svg" width="32" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="docs/windows.svg" width="32" />
+## Supported Platforms <img src="docs/windows.svg" width="40" align="right" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="docs/linux.svg" width="40" align="right" />
 
 ## Features
 
@@ -37,6 +37,7 @@ After running the command below a window open and the project will be running on
 
 ```bash
 # Runs the development server and opens electron
+
 $ pnpm dev
 ```
 
@@ -46,7 +47,7 @@ To build and package the application, run the following command:
 
 ```bash
 # Builds the frontend and packages the app based on the
-# current operating system (windows and linux are supported)
+# current operating system
 
 $ pnpm release
 ```
