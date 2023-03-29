@@ -23,6 +23,7 @@ export default defineNuxtConfig({
   },
   electron: {
     outDir: "out",
+    disableDefaultOptions: true,
   },
   colorMode: {
     classSuffix: "",

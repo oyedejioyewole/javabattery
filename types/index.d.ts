@@ -12,6 +12,7 @@ declare interface Window {
   globals: {
     openSite: (url: string) => Promise<void>;
     getPath: (...path: string[]) => string;
+    saveSettings: (settings: string) => Promise<string | NodeJS.ErrnoException>;
   };
 }
 

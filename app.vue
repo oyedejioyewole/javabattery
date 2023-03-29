@@ -36,8 +36,8 @@ watch(status, async (_new) => {
 
   const notification = useWebNotification({
     icon: process.dev
-      ? "/icon.ico"
-      : window.globals.getPath("public", "icon.ico"),
+      ? "/favicon.ico"
+      : window.globals.getPath("public", "favicon.ico"),
     title: "Javabattery",
   });
 

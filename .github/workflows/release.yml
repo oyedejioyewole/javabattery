@@ -13,7 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Project preparation
-        run: npm install -g pnpm
+        run: |
+          npm install -g pnpm
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y imagemagick
+          elif [ "${{ runner.os }}" == "Windows" ]; then
+            choco install imagemagick
+          fi
       - name: Install dependencies
         run: pnpm install
       - name: Build, package and publish release

@@ -21,6 +21,14 @@ const settings = useStorage<Settings>("settings", {
   enableNotifications: true,
   enableHighlighter: true,
 });
+
+await window.globals.saveSettings(JSON.stringify(settings.value));
+
+watch(
+  settings,
+  async (_new) => await window.globals.saveSettings(JSON.stringify(_new))
+);
+
 const notificationToggled = ref(settings.value.enableNotifications);
 const highlighterToggled = ref(settings.value.enableHighlighter);
 

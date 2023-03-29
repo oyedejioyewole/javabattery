@@ -1,9 +1,19 @@
-import { app, BrowserWindow, Menu, Tray, Notification } from "electron";
-import { join } from "path";
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  Tray,
+  Notification,
+  ipcMain,
+} from "electron";
+import { join, resolve } from "path";
 import battery from "battery";
-const { autoUpdater } = require("electron-updater");
+import { autoUpdater } from "electron-updater";
+import { writeFile, readFileSync, existsSync } from "fs";
+import tinydate from "tinydate";
+import { randomUUID } from "crypto";
 
-autoUpdater.checkForUpdatesAndNotify();
+if (app.isPackaged) autoUpdater.checkForUpdatesAndNotify();
 
 const createWindow = () => {
   const window = new BrowserWindow({
@@ -93,21 +103,43 @@ const ref = <T>(initialValue: T) => {
 (async () => {
   const _battery = ref(await battery());
   const trayList: Array<Tray> = [];
+  const configPath = resolve(app.getPath("userData"), "config.json");
+
+  ipcMain.handle("save-settings", (_, settings: string) => {
+    writeFile(configPath, settings, (error) => {
+      const logPath = resolve(
+        app.getPath("logs"),
+        tinydate(`{YYYY}-{MM}-{DD}-${randomUUID()}.log`)()
+      );
+
+      if (error) writeFile(logPath, `[ERROR] ${error.message} `, () => {});
+    });
+
+    return "done";
+  });
 
   if (app.isPackaged) {
     Menu.setApplicationMenu(null);
   }
 
   app.whenReady().then(() => {
+    if (!existsSync(configPath)) writeFile(configPath, "", () => {});
+
     let interval: NodeJS.Timer;
     createWindow();
 
     app.on("window-all-closed", () => {
+      let { enableNotifications }: Settings = JSON.parse(
+        readFileSync(configPath, "utf-8").toString()
+      );
+
       trayList.push(createTrays());
 
-      interval = setInterval(async () => {
-        _battery.value = await battery();
-      }, 1000);
+      if (enableNotifications) {
+        interval = setInterval(async () => {
+          _battery.value = await battery();
+        }, 1000);
+      }
     });
 
     app.on("browser-window-created", () => {
