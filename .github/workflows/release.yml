@@ -12,17 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Project preparation
+      - name: Install pnpm
         run: npm install -g pnpm
-      - name: Install ImageMagick (windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          choco install imagemagick
-      - name: Install ImageMagick (linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          wget https://imagemagick.org/archive/binaries/magick
-          chmod +x magick
       - name: Install dependencies
         run: pnpm install
       - name: Build, package and publish release
