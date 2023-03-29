@@ -4,7 +4,7 @@
 
 ![Preview](./docs/preview.png)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/OyewoleOyedeji/javabattery?color=%23191910&label=Repository%20size&logo=Github&style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/OyewoleOyedeji/javabattery?color=%23191910&label=Repository%20size&logo=Github&style=for-the-badge)&nbsp;&nbsp;![GitHub release (latest by date)](https://img.shields.io/github/v/release/OyewoleOyedeji/javabattery?color=191919&label=Latest%20version&style=for-the-badge)
 
 ## Supported Platforms <img src="docs/windows.svg" width="40" align="right" />&nbsp;&nbsp;&nbsp;&nbsp;<img src="docs/linux.svg" width="40" align="right" />
 
@@ -23,11 +23,23 @@
 
 The commands I'll be using are for `pnpm`, but you can use `yarn` or `npm` if you want.
 
+- Step 1
+
 ```bash
 # Install dependencies and build icons used in the project
-
 $ pnpm install
 ```
+
+- Step 2
+
+```bash
+# Create the icons used in the project
+$ pnpm build:icons
+```
+
+- Step 3
+
+Copy `build/icons/icon.ico` to `public/` and then rename `icon.ico -> favicon.ico`
 
 ## Running
 
@@ -37,7 +49,6 @@ After running the command below a window open and the project will be running on
 
 ```bash
 # Runs the development server and opens electron
-
 $ pnpm dev
 ```
 
@@ -46,9 +57,7 @@ $ pnpm dev
 To build and package the application, run the following command:
 
 ```bash
-# Builds the frontend and packages the app based on the
-# current operating system
-
+# Builds the frontend and packages the application
 $ pnpm release
 ```
 

@@ -11,9 +11,9 @@
   "productName": "Javabattery",
   "scripts": {
     "build": "nuxt generate",
+    "build:icons": "magick convert -background transparent build/icon.svg -define icon:auto-resize build/icons/icon.ico && magick convert -background transparent build/icon.svg build/icons/icon.png",
     "dev": "nuxt dev",
     "debug": "vue-devtools",
-    "icons": "magick convert -background transparent build/icon.svg -define icon:auto-resize build/icons/icon.ico && magick convert -background transparent build/icon.svg build/icons/icon.png && cp build/icons/icon.ico public/favicon.ico",
     "package": "electron-builder --dir",
     "postinstall": "nuxt prepare && node node_modules/vite-plugin-electron-renderer/install.js",
     "release": "nuxt generate && electron-builder"
