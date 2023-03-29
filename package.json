@@ -13,7 +13,7 @@
     "build": "nuxt generate",
     "dev": "nuxt dev",
     "debug": "vue-devtools",
-    "icons": "convert -background transparent build/icon.svg -define icon:auto-resize build/icons/icon.ico && convert -background transparent build/icon.svg build/icons/icon.png && cp build/icons/icon.ico public/favicon.ico",
+    "icons": "magick convert -background transparent build/icon.svg -define icon:auto-resize build/icons/icon.ico && magick convert -background transparent build/icon.svg build/icons/icon.png && cp build/icons/icon.ico public/favicon.ico",
     "package": "electron-builder --dir",
     "postinstall": "npm run icons && nuxt prepare && node node_modules/vite-plugin-electron-renderer/install.js",
     "release": "nuxt generate && electron-builder"

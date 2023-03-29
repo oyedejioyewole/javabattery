@@ -21,8 +21,8 @@ jobs:
       - name: Install ImageMagick (linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick
+          wget https://imagemagick.org/archive/binaries/magick
+          chmod +x magick
       - name: Install dependencies
         run: pnpm install
       - name: Build, package and publish release
