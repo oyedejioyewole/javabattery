@@ -6,9 +6,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/OyewoleOyedeji/javabattery?color=%23191910&label=Repository%20size&logo=Github&style=for-the-badge)
 
-<img src="docs/linux.svg" width="32" />
-<div style="padding-right: 0.5rem; display: inline-block"></div>
-<img src="docs/windows.svg" width="32" />
+<img src="docs/linux.svg" width="32" />&nbsp;&nbsp;<img src="docs/windows.svg" width="32" />
 
 ## Features
 
