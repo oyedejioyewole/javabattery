@@ -1,4 +1,4 @@
-<img src="build/icon.svg" width=128 align="right" />
+<img src="build/icon.svg" width="64" align="right" />
 
 # Javabattery
 
