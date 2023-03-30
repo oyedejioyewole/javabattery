@@ -22,7 +22,9 @@ const settings = useStorage<Settings>("settings", {
   enableHighlighter: true,
 });
 
-await window.globals.saveSettings(JSON.stringify(settings.value));
+onMounted(
+  async () => await window.globals.saveSettings(JSON.stringify(settings.value))
+);
 
 watch(
   settings,

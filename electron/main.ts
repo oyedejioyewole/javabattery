@@ -12,8 +12,23 @@ import { autoUpdater } from "electron-updater";
 import { writeFile, readFileSync, existsSync } from "fs";
 import tinydate from "tinydate";
 import { randomUUID } from "crypto";
+import { createServer } from "http";
+import handler from "serve-handler";
 
-if (app.isPackaged) autoUpdater.checkForUpdatesAndNotify();
+let listeningPort: number;
+
+if (app.isPackaged) {
+  autoUpdater.checkForUpdatesAndNotify();
+
+  // Create a server for the prebuilt files
+  const server = createServer((request, response) => {
+    return handler(request, response, {
+      public: join(__dirname, "../.output/public"),
+    });
+  });
+  listeningPort = Math.floor(Math.random() * (65_535 - 1024) + 1024);
+  server.listen(listeningPort);
+}
 
 const createWindow = () => {
   const window = new BrowserWindow({
@@ -28,11 +43,12 @@ const createWindow = () => {
         ? join(__dirname, "../build/icons/icon.png")
         : join(__dirname, "../build/icons/icon.ico"),
   });
-  if (app.isPackaged) {
-    window.loadFile(join(__dirname, "../.output/public/index.html"));
-  } else {
-    window.loadURL(process.env.VITE_DEV_SERVER_URL);
-  }
+
+  window.loadURL(
+    app.isPackaged
+      ? `http://localhost:${listeningPort}`
+      : process.env.VITE_DEV_SERVER_URL
+  );
 };
 
 const createTrays = () => {

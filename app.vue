@@ -35,9 +35,7 @@ watch(status, async (_new) => {
   if (!settings.value.enableNotifications) return;
 
   const notification = useWebNotification({
-    icon: process.dev
-      ? "/favicon.ico"
-      : window.globals.getPath("public", "favicon.ico"),
+    icon: "/favicon.ico",
     title: "Javabattery",
   });
 
@@ -79,9 +77,7 @@ onMounted(() =>
   useFont([
     {
       family: "Open Sans",
-      src: process.dev
-        ? "/fonts/open-sans.woff2"
-        : window.globals.getPath("public", "fonts", "open-sans.woff2"),
+      src: "/fonts/open-sans.woff2",
       display: "swap",
     },
   ])
@@ -165,10 +161,6 @@ onMounted(() =>
 </template>
 
 <style>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @keyframes scale {
   from {
     scale: 1;
