@@ -41,19 +41,21 @@ if (app.isPackaged) {
 }
 
 const configPath = resolve(app.getPath("userData"), "config.json");
+const icon =
+  process.platform === "linux"
+    ? join(__dirname, "../build/icons/icon.png")
+    : join(__dirname, "../build/icons/icon.ico");
+const preload = app.isPackaged
+  ? join(__dirname, "./preload.js")
+  : join(__dirname, "../out/preload.js");
 
 const createWindow = () => {
   const window = new BrowserWindow({
     webPreferences: {
-      preload: app.isPackaged
-        ? join(__dirname, "./preload.js")
-        : join(__dirname, "../out/preload.js"),
+      preload,
       nodeIntegration: true,
     },
-    icon:
-      process.platform === "linux"
-        ? join(__dirname, "../build/icons/icon.png")
-        : join(__dirname, "../build/icons/icon.ico"),
+    icon,
   });
 
   window.loadURL(
@@ -64,11 +66,7 @@ const createWindow = () => {
 };
 
 const createTrays = () => {
-  const tray = new Tray(
-    process.platform === "linux"
-      ? join(__dirname, "../build/icons/icon.png")
-      : join(__dirname, "../build/icons/icon.ico")
-  );
+  const tray = new Tray(icon);
 
   const trayMenu = Menu.buildFromTemplate([
     { label: "Open", click: () => createWindow() },
@@ -92,10 +90,7 @@ const ref = <T>(initialValue: T) => {
         target[key] = newValue;
 
         const notification = new Notification({
-          icon:
-            process.platform === "linux"
-              ? join(__dirname, "../public/build/icons/icon.png")
-              : join(__dirname, "../public/build/icons/icon.ico"),
+          icon,
         });
 
         const batteryLevel = Number((newValue.level * 100).toFixed(0));

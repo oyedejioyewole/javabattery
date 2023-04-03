@@ -17,6 +17,7 @@ export default defineNuxtConfig({
           ? { src: "http://localhost:8098", tagPosition: "bodyClose" }
           : {},
       ],
+      title: "Javabattery",
     },
   },
   tailwindcss: {

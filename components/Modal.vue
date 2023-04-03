@@ -390,7 +390,7 @@ watch(
                     <input
                       type="number"
                       placeholder="%"
-                      class="placeholder:text-center dark:placeholder:text-black/70 p-1 rounded-full backdrop-blur-lg bg-transparent dark:bg-white dark:bg-opacity-70 outline-none text-center focus-visible:ring-2 dark:focus-visible:ring-2 dark:focus-visible:ring-green-500 dark:focus-visible:ring-offset-2 form-input border-0"
+                      class="placeholder:text-center dark:placeholder:text-black/70 p-1 rounded-full backdrop-blur-lg bg-transparent dark:bg-white dark:bg-opacity-70 outline-none text-center focus-visible:ring-2 form-input border-0 transition"
                       max="100"
                       min="0"
                       :class="{
@@ -398,6 +398,14 @@ watch(
                         'focus-visible:ring-orange-900':
                           status >= 30 && status <= 50,
                         'focus-visible:ring-red-900': status < 30,
+                        'dark:focus-visible:ring-green-700':
+                          status > 50 && $colorMode.value === 'dark',
+                        'dark:focus-visible:ring-orange-700':
+                          status >= 30 &&
+                          status <= 50 &&
+                          $colorMode.value === 'dark',
+                        'dark:focus-visible:ring-red-700':
+                          status < 30 && $colorMode.value === 'dark',
                       }"
                       v-model="userProvidedBatteryLevel"
                     />
@@ -474,7 +482,24 @@ watch(
                     v-if="settings.notifyOnBatteryLevels.length > 0"
                   >
                     <h3
-                      class="px-2 py-1 bg-green-300 rounded-full cursor-pointer hover:bg-green-400 transition"
+                      class="px-2 py-1 rounded-full cursor-pointer transition"
+                      :class="{
+                        'bg-green-300': status > 50,
+                        'bg-orange-300': status >= 30 && status <= 50,
+                        'bg-red-300': status < 30,
+                        'dark:bg-green-500':
+                          status > 50 && $colorMode.value === 'dark',
+                        'dark:bg-orange-500':
+                          status >= 30 &&
+                          status <= 50 &&
+                          $colorMode.value === 'dark',
+                        'dark:bg-red-500':
+                          status < 30 && $colorMode.value === 'dark',
+                        'hover:bg-green-500': status > 50,
+                        'hover:bg-orange-500': status >= 30 && status <= 50,
+                        'hover:bg-red-500': status < 30,
+                        'hover:opacity-70': $colorMode.value === 'dark',
+                      }"
                       @click="showBatteryLevelOptions(level)"
                     >
                       {{ level }}%
