@@ -1,12 +1,4 @@
 <script setup lang="ts">
-import { useStorage } from "@vueuse/core";
-
-useHead({
-  bodyAttrs: {
-    class: "dark:bg-black/90",
-  },
-});
-
 const toggleModal = (type: ModalType) => {
   const modal = useState<Modal>("modal");
   modal.value = {
@@ -25,43 +17,47 @@ const convertTime = (time: number) => {
   };
 };
 
+useFont([
+  {
+    family: "Open Sans",
+    src: "/fonts/open-sans.woff2",
+    display: "swap",
+  },
+]);
+
+useHead({
+  bodyAttrs: {
+    class: "dark:bg-black/90",
+  },
+});
+
+const { x, y } = useMouse();
 const { status, charging, time } = useBattery();
 
-/**
- * Watches the level ref and sends an appropriate notification based on the
- *  new value approximated to .1 or .12 places
- */
+const settings = useState<Settings>("settings");
+const isSettingsLoaded = ref(false);
+
 watch(status, async (_new) => {
-  if (!settings.value.enableNotifications) return;
+  if (
+    !settings.value.enableNotifications ||
+    settings.value.notifyOnBatteryLevels.length < 1
+  )
+    return;
 
   const notification = useWebNotification({
     icon: "/favicon.ico",
     title: "Javabattery",
   });
 
-  if (charging.value) {
-    if (_new === 90)
-      notification.show({ body: "You can stop charging the device now 🎉" });
-    else if (_new === 50)
-      notification.show({ body: "You've reached the halfway mark 🎉" });
-    else if (_new === 100) {
-      notification.show({ body: "The device is fully charged 🎉" });
+  for (const batteryLevel of settings.value.notifyOnBatteryLevels) {
+    if (batteryLevel.level === _new) {
+      notification.show({
+        body: charging.value
+          ? `You have reached ${_new}% 🎉`
+          : `You at ${_new}% 👀`,
+      });
     }
-    return;
   }
-
-  if (_new === 500)
-    notification.show({ body: "I'll advise you to start charging now 👀" });
-  else if (_new === 30)
-    notification.show({ body: "You really need to starting charging 👀" });
-  else if (_new === 15)
-    notification.show({ body: "I've warned you, now I'll shut up 👀" });
-});
-
-const { x, y } = useMouse();
-const settings = useStorage<Settings>("settings", {
-  enableNotifications: true,
-  enableHighlighter: true,
 });
 
 const isSettingsShortcutPressed = useMagicKeys({})["Shift+S"];
@@ -73,15 +69,10 @@ watch(isSettingsShortcutPressed, (_new) => {
   if (_new) toggleModal("settings");
 });
 
-onMounted(() =>
-  useFont([
-    {
-      family: "Open Sans",
-      src: "/fonts/open-sans.woff2",
-      display: "swap",
-    },
-  ])
-);
+onMounted(async () => {
+  settings.value = (await useConfig()).value;
+  isSettingsLoaded.value = true;
+});
 </script>
 
 <template>
@@ -96,7 +87,7 @@ onMounted(() =>
         'from-orange-300 to-orange-700': status >= 30 && status <= 50,
         'from-red-300 to-red-700': status < 30,
         'animate-scale': charging,
-        'opacity-0': !settings.enableHighlighter,
+        'opacity-0': isSettingsLoaded && !settings.enableHighlighter,
       }"
       v-if="status !== -1"
     ></div>
@@ -110,7 +101,7 @@ onMounted(() =>
     />
 
     <!-- Anonymous modal -->
-    <Modal />
+    <Modal v-if="isSettingsLoaded" />
 
     <!-- Hidden info -->
     <div
@@ -123,14 +114,17 @@ onMounted(() =>
           'text-white dark:text-[#191919]': settings.enableHighlighter,
           'text-black dark:text-white': !settings.enableHighlighter,
         }"
+        v-if="isSettingsLoaded"
       >
         <span>Press <code>Shift + S</code> for</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-5 aspect-square"
           :class="{
-            'fill-white dark:fill-[#191919]': settings.enableHighlighter,
-            'fill-black dark:fill-white': !settings.enableHighlighter,
+            'fill-white dark:fill-[#191919]':
+              isSettingsLoaded && settings.enableHighlighter,
+            'fill-black dark:fill-white':
+              isSettingsLoaded && !settings.enableHighlighter,
           }"
           viewBox="0 0 16 16"
         >
@@ -142,10 +136,12 @@ onMounted(() =>
 
       <h4
         :class="{
-          'text-white dark:text-[#191919]': settings.enableHighlighter,
-          'text-black dark:text-white': !settings.enableHighlighter,
+          'text-white dark:text-[#191919]':
+            isSettingsLoaded && settings.enableHighlighter,
+          'text-black dark:text-white':
+            isSettingsLoaded && !settings.enableHighlighter,
         }"
-        v-if="!charging && time !== Infinity"
+        v-if="!charging && time !== Infinity && time !== -1 && isSettingsLoaded"
       >
         &approx;
         {{

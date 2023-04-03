@@ -11,9 +11,10 @@
 ## Features
 
 1. Nice UI (made with [TailwindCSS](https://tailwind.css))
-2. Notifications on battery percentage (never get caught offguard again)
-3. A moving blob (because why not - it is also an highlighter)
-4. Battery percentage changes in realtime
+2. Notifications on battery percentage (never get caught off-guard again)
+3. Customizable battery levels for notifications (v1.0.3)
+4. A moving blob (because why not - it is also an highlighter)
+5. Battery percentage changes in realtime
 
 ## Pre-requisites
 
@@ -63,4 +64,4 @@ $ pnpm release
 
 ## TODOs
 
-1. Add the ability for users to add custom battery levels for notifications
+~~1. Add the ability for users to add custom battery levels for notifications~~

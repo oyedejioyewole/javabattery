@@ -11,7 +11,7 @@
   directories: {
     output: "app",
   },
-  files: ["out", ".output/**/*", "build", "public"],
+  files: ["out", ".output/**/*", "build", "public", "config"],
   artifactName: "${name}-${arch}-${version}.${ext}",
   publish: ["github"],
 }

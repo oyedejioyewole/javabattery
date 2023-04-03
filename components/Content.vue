@@ -22,6 +22,7 @@ watch(
         viewBox="0 0 16 16"
         v-if="charging"
       >
+        <!-- Charging icon -->
         <path
           d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"
         />
@@ -35,6 +36,8 @@ watch(
           d="M12 10h-1.783l1.542-1.639c.097-.103.178-.218.241-.34V10zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646zM16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"
         />
       </svg>
+
+      <!-- Battery percentage -->
       <h1
         class="text-5xl slashed-zero font-thin dark:text-white"
         v-if="status !== -1"

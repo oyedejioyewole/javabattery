@@ -1,0 +1,56 @@
+{
+  "enableNotifications": true,
+  "enableHighlighter": true,
+  "notifyOnBatteryLevels": [
+    {
+      "level": 10,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 20,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 30,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 40,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 50,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 60,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 70,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 80,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 90,
+      "whenCharging": true,
+      "whenDischarging": true
+    },
+    {
+      "level": 100,
+      "whenCharging": true,
+      "whenDischarging": true
+    }
+  ]
+}

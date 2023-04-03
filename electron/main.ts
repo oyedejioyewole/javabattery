@@ -9,11 +9,17 @@ import {
 import { join, resolve } from "path";
 import battery from "battery";
 import { autoUpdater } from "electron-updater";
-import { writeFile, readFileSync, existsSync } from "fs";
+import { writeFile, existsSync } from "fs";
 import tinydate from "tinydate";
 import { randomUUID } from "crypto";
 import { createServer } from "http";
 import handler from "serve-handler";
+import { readSettings } from "./utils";
+import {
+  enableHighlighter,
+  enableNotifications,
+  notifyOnBatteryLevels,
+} from "../config/defaults.json";
 
 let listeningPort: number;
 
@@ -28,7 +34,13 @@ if (app.isPackaged) {
   });
   listeningPort = Math.floor(Math.random() * (65_535 - 1024) + 1024);
   server.listen(listeningPort);
+
+  app.on("before-quit", () => server.close());
+} else {
+  app.setPath("userData", join(__dirname, "../.temp/", app.name.toLowerCase()));
 }
+
+const configPath = resolve(app.getPath("userData"), "config.json");
 
 const createWindow = () => {
   const window = new BrowserWindow({
@@ -72,6 +84,7 @@ const ref = <T>(initialValue: T) => {
     { value: initialValue },
     {
       set: (target, key, newValue) => {
+        if (key !== "value") return;
         const oldValue = target[key];
 
         if (oldValue.level === newValue.level) return;
@@ -81,45 +94,47 @@ const ref = <T>(initialValue: T) => {
         const notification = new Notification({
           icon:
             process.platform === "linux"
-              ? join(__dirname, "../public/icon.png")
-              : join(__dirname, "../public/icon.ico"),
+              ? join(__dirname, "../public/build/icons/icon.png")
+              : join(__dirname, "../public/build/icons/icon.ico"),
         });
 
-        const approximatedBatteryLevels = [
-          Number(target[key].level.toFixed(1)),
-          Number(target[key].level.toFixed(2)),
-        ];
+        const batteryLevel = Number((newValue.level * 100).toFixed(0));
+        const { notifyOnBatteryLevels } = readSettings(configPath);
 
-        if (approximatedBatteryLevels[0] === approximatedBatteryLevels[1]) {
-          if (target[key].charging) {
-            if (approximatedBatteryLevels[0] === 0.9)
-              notification.body = "You can stop charging the device now 🎉";
-            else if (approximatedBatteryLevels[0] === 0.5)
-              notification.body = "You've reached the halfway mark 🎉";
-            else if (approximatedBatteryLevels[0] === 1) {
-              notification.body = "The device is fully charged 🎉";
-            }
-            return;
+        for (const { level } of notifyOnBatteryLevels) {
+          if (batteryLevel === level) {
+            notification.body = newValue.charging
+              ? `You have reached ${batteryLevel}% 🎉`
+              : `You at ${batteryLevel}% 👀`;
           }
-
-          if (approximatedBatteryLevels[0] === 0.5)
-            notification.body = "I'll advise you to start charging now 👀";
-          else if (approximatedBatteryLevels[0] === 0.3)
-            notification.body = "You really need to starting charging 👀";
         }
 
-        if (approximatedBatteryLevels[1] === 0.15 && !target[key].charging)
-          notification.body = "I've warned you, now I'll shut up 👀";
         if (notification.body.length > 0) notification.show();
       },
     }
   );
 };
 
+const setup = () => {
+  if (!existsSync(configPath))
+    writeFile(
+      configPath,
+      JSON.stringify({
+        enableHighlighter,
+        enableNotifications,
+        notifyOnBatteryLevels: notifyOnBatteryLevels.sort(
+          (a, b) => a.level - b.level
+        ),
+      }),
+      () => {}
+    );
+};
+
 (async () => {
   const _battery = ref(await battery());
   const trayList: Array<Tray> = [];
-  const configPath = resolve(app.getPath("userData"), "config.json");
+
+  setup();
 
   ipcMain.handle("save-settings", (_, settings: string) => {
     writeFile(configPath, settings, (error) => {
@@ -134,20 +149,20 @@ const ref = <T>(initialValue: T) => {
     return "done";
   });
 
+  ipcMain.handle("read-settings", () => {
+    return readSettings(configPath);
+  });
+
   if (app.isPackaged) {
     Menu.setApplicationMenu(null);
   }
 
   app.whenReady().then(() => {
-    if (!existsSync(configPath)) writeFile(configPath, "", () => {});
-
     let interval: NodeJS.Timer;
     createWindow();
 
     app.on("window-all-closed", () => {
-      let { enableNotifications }: Settings = JSON.parse(
-        readFileSync(configPath, "utf-8").toString()
-      );
+      let { enableNotifications } = readSettings(configPath);
 
       trayList.push(createTrays());
 

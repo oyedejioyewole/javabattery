@@ -12,11 +12,15 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "en-US",
       },
+      script: [
+        process.env.NODE_ENV === "development"
+          ? { src: "http://localhost:8098", tagPosition: "bodyClose" }
+          : {},
+      ],
     },
   },
   tailwindcss: {
     exposeConfig: true,
-    injectPosition: "first",
   },
   fonty: {
     autoImport: true,
