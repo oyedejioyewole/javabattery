@@ -2,6 +2,10 @@
 
 # Javabattery
 
+## v1.0.3 (Add new feature 🎉)
+
+You can now set and manage the battery levels to be notified 📢
+
 ## v1.0.2 (Improvements 🚀)
 
 The UI is now prebuilt instead of being built on the fly 🏗️ (the app is now 2x faster 🚀)
